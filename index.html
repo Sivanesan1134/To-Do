@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My To-Do App</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #101827;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 18px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 25px;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background: #334155;
+    color: white;
+    min-width: 0;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.add-btn {
+    background: #6366f1;
+    color: white;
+    padding: 12px 17px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+    margin: 22px 0;
+    font-size: 14px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #334155;
+    padding: 13px;
+    border-radius: 9px;
+    margin-bottom: 10px;
+}
+
+li span {
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+li.completed span {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+    padding: 7px 10px;
+}
+
+.empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>My Tasks ✨</h1>
+    <p class="subtitle">Organise your day, one task at a time.</p>
+
+    <div class="input-area">
+        <input type="text" id="taskInput"
+        placeholder="Enter a new task...">
+        <button class="add-btn" onclick="addTask()">Add</button>
+    </div>
+
+    <div class="stats">
+        <span id="total">Total: 0</span>
+        <span id="completed">Completed: 0</span>
+    </div>
+
+    <ul id="taskList"></ul>
+
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (text === "") {
+        alert("Please enter a task!");
+        return;
+    }
+
+    tasks.push({
+        id: Date.now(),
+        text: text,
+        completed: false
+    });
+
+    input.value = "";
+    saveTasks();
+    displayTasks();
+}
+
+function toggleTask(id) {
+    tasks = tasks.map(task =>
+        task.id === id
+        ? {...task, completed: !task.completed}
+        : task
+    );
+
+    saveTasks();
+    displayTasks();
+}
+
+function deleteTask(id) {
+    tasks = tasks.filter(task => task.id !== id);
+    saveTasks();
+    displayTasks();
+}
+
+function displayTasks() {
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    if (tasks.length === 0) {
+        list.innerHTML =
+        '<p class="empty">No tasks yet. Add one!</p>';
+    }
+
+    tasks.forEach(task => {
+        const li = document.createElement("li");
+
+        if (task.completed) {
+            li.classList.add("completed");
+        }
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+        checkbox.style.flex = "none";
+        checkbox.addEventListener("change", () =>
+            toggleTask(task.id)
+        );
+
+        const span = document.createElement("span");
+        span.textContent = task.text;
+
+        const button = document.createElement("button");
+        button.textContent = "Delete";
+        button.className = "delete-btn";
+        button.addEventListener("click", () =>
+            deleteTask(task.id)
+        );
+
+        li.append(checkbox, span, button);
+        list.appendChild(li);
+    });
+
+    document.getElementById("total").textContent =
+        "Total: " + tasks.length;
+
+    document.getElementById("completed").textContent =
+        "Completed: " +
+        tasks.filter(task => task.completed).length;
+}
+
+document.getElementById("taskInput")
+.addEventListener("keydown", event => {
+    if (event.key === "Enter") addTask();
+});
+
+displayTasks();
+</script>
+
+</body>
+</html>
