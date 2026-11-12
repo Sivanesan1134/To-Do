@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My To-Do App</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%236366f1'/%3E%3Cpath d='M18 33.5l8 8L46 13.5' fill='none' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
 <style>
 * {
@@ -32,9 +33,33 @@ body {
     border-radius: 18px;
 }
 
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+}
+
+.brand-mark svg {
+    width: 26px;
+    height: 26px;
+}
+
 h1 {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 .subtitle {
@@ -121,7 +146,15 @@ li.completed span {
 
 <div class="container">
 
-    <h1>My Tasks ✨</h1>
+    <div class="app-header">
+        <div class="brand-mark" aria-label="To-Do app logo">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="4" y="4" width="56" height="56" rx="16" fill="rgba(255,255,255,0.15)"/>
+                <path d="M18 33.5L26 41.5L46 19.5" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1>My Tasks ✨</h1>
+    </div>
     <p class="subtitle">Organise your day, one task at a time.</p>
 
     <div class="input-area">
